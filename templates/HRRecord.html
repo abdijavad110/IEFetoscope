@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400" rel="stylesheet"/>
+    <link href="fontawesome/css/all.min.css" rel="stylesheet"/>
+    <link href="css/templatemo-comparto.css" rel="stylesheet"/>
+    <title>IEFetoscope</title>
+</head>
+
+<body>
+<!-- Back to top button -->
+<a id="button"><i class="fas fa-angle-up fa-2x"></i></a>
+<div class="container-fluid">
+    <div class="tm-site-header tm-mb-1">
+        <div class="tm-site-name-container tm-bg-color-4">
+            <img src="/logo" height="60%">
+            <h1 class="tm-text-white">IEFetoscope</h1>
+        </div>
+        <div class="tm-nav-container tm-bg-color-8">
+            <nav class="tm-nav" id="tm-nav">
+                <ul>
+                    <li class="tm-nav-item">
+                        <a href="/PatientsList" class="tm-nav-link">
+                            <span>Patients<br>List</span>
+                        </a>
+                    </li>
+                    <li class="tm-nav-item">
+                        <a href="" class="tm-nav-link">
+                            <span>New<br>Patient</span>
+                        </a>
+                    </li>
+                    <li class="tm-nav-item">
+                        <a href="" class="tm-nav-link">
+                            <span>Test<br>Device</span>
+                        </a>
+                    </li>
+                    <li class="tm-nav-item">
+                        <a href="" class="tm-nav-link">
+                            <span>Config<br>Device</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <section id="contact" class="tm-bg-color-4 tm-mb-3">
+        <div class="tm-bg-color-white">
+            <div class="tm-row tm-services-row tm-mb-1">
+                <div class="tm-section-2-l">
+                    <article class="tm-bg-color-6 tm-box-pad text-center" style="position: relative">
+                        <h2 class="tm-mb-2">Mrs. Irina Lyles</h2>
+                        <a href="" class="tm-btn tm-btn-2 btn-hv-blue disabled">start</a>
+                        <a href="" class="tm-btn tm-btn-2 btn-hv-blue">stop</a>
+                        <a href="" class="tm-btn tm-btn-2 btn-hv-blue">import</a>
+                    </article>
+                </div>
+                <div class="tm-bg-color-7 tm-em-box tm-section-2-r">
+                    <table class="heartTable">
+                        <tr>
+                            <th>Heart Rate</th>
+                            <th>Baseline</th>
+                            <th>Accelerations</th>
+                            <th>Variability</th>
+                        </tr>
+                        <tr>
+                            <td id="hr_val">130</td>
+                            <td id="bl_val">130</td><!--show warning as box bg color-->
+                            <td id="ac_val">NORMAL</td><!--show warning as box bg color-->
+                            <td id="vr_val">NORMAL</td><!--show warning as box bg color-->
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div>
+                <iframe id="plot_frame" class="big-plot" scrolling="no" frameborder="0" src="/plot"></iframe>
+            </div>
+        </div>
+    </section>
+    <footer class="text-center tm-mb-1">
+        <p>Copyright &copy; 2020 Comparto Studio
+            - Design: <a rel="nofollow noopener" href="https://templatemo.com" target="_blank">TemplateMo</a></p>
+    </footer>
+</div> <!-- .container -->
+<script src="js/jquery.min.js"></script> <!-- https://jquery.com/download/ -->
+<script src="js/imagesloaded.pkgd.min.js"></script> <!-- https://imagesloaded.desandro.com/ -->
+<script src="js/isotope.pkgd.min.js"></script> <!-- https://isotope.metafizzy.co/ -->
+<script src="js/jquery.singlePageNav.min.js"></script> <!-- https://github.com/ChrisWojcik/single-page-nav -->
+<script>
+    function refresh_plt() {
+        let req1 = new XMLHttpRequest();
+        req1.onreadystatechange = function () {
+            if (req1.readyState == 4 && req1.status == 200) {
+                var vals = req1.responseText.split(',');
+                document.getElementById('hr_val').innerText = vals[0];
+                document.getElementById('bl_val').innerText = vals[1];
+                document.getElementById('ac_val').innerText = vals[2];
+                document.getElementById('vr_val').innerText = vals[3];
+            }
+        }
+        req1.open("GET", '/info', true);
+        req1.send(null);
+
+        // let req2 = new XMLHttpRequest();
+        // req2.onreadystatechange = function () {
+        //     if (req2.readyState == 4 && req2.status == 200) {
+        //         document.getElementById('plot_frame').innerHTML = req2.responseText;
+        //     }
+        // }
+        // req2.open("GET", '/plot', true);
+        // req2.send(null);
+
+        document.getElementById("plot_frame").src = document.getElementById("plot_frame").src;
+    }
+
+    function init() {
+        refresh_plt()
+    }
+    var int = self.setInterval(function () {
+        refresh_plt()
+    }, 5000);
+
+
+    // Scroll to Top button
+    var btn = $('#button');
+
+    $(window).scroll(function () {
+        if ($(window).scrollTop() > 300) {
+            btn.addClass('show');
+        } else {
+            btn.removeClass('show');
+        }
+    });
+
+    btn.on('click', function (e) {
+        e.preventDefault();
+        $('html, body').animate({scrollTop: 0}, '300');
+    });
+
+    // DOM is ready
+    $(function () {
+        // Single Page Nav
+        // $('#tm-nav').singlePageNav({speed: 600});
+
+        // Smooth Scroll (https://css-tricks.com/snippets/jquery/smooth-scrolling/)
+        $('a[href*="#"]')
+            // Remove links that don't actually link to anything
+            .not('[href="#"]')
+            .not('[href="#0"]')
+            .click(function (event) {
+                // On-page links
+                if (
+                    location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '')
+                    &&
+                    location.hostname == this.hostname
+                ) {
+                    // Figure out element to scroll to
+                    var target = $(this.hash);
+                    target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+                    // Does a scroll target exist?
+                    if (target.length) {
+                        // Only prevent default if animation is actually gonna happen
+                        event.preventDefault();
+                        $('html, body').animate({
+                            scrollTop: target.offset().top
+                        }, 600, function () {
+                            // Callback after animation
+                            // Must change focus!
+                            var $target = $(target);
+                            $target.focus();
+                            if ($target.is(":focus")) { // Checking if the target was focused
+                                return false;
+                            } else {
+                                $target.attr('tabindex', '-1'); // Adding tabindex for elements not focusable
+                                $target.focus(); // Set focus again
+                            }
+                            ;
+                        });
+                    }
+                }
+            });
+
+        /* Isotope Gallery */
+
+        // init isotope
+        var $gallery = $(".tm-gallery").isotope({
+            itemSelector: ".tm-gallery-item",
+            layoutMode: "fitRows"
+        });
+        // layout Isotope after each image loads
+        $gallery.imagesLoaded().progress(function () {
+            $gallery.isotope("layout");
+        });
+
+        $(".filters-button-group").on("click", "a", function () {
+            var filterValue = $(this).attr("data-filter");
+            $gallery.isotope({filter: filterValue});
+        });
+
+        // $(".tabgroup > div").hide();
+        // $(".tabgroup > div:first-of-type").show();
+        $(".tabs a").click(function (e) {
+            e.preventDefault();
+            var $this = $(this),
+                tabgroup = "#" + $this.parents(".tabs").data("tabgroup"),
+                others = $this
+                    .closest("li")
+                    .siblings()
+                    .children("a"),
+                target = $this.attr("href");
+            others.removeClass("active");
+            $this.addClass("active");
+        });
+    });
+</script>
+</body>
+</html>
